@@ -25,5 +25,4 @@ public class RequestField {
     Boolean required;
     @Nullable
     List<String> options;
-
 }

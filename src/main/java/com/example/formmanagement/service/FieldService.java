@@ -3,6 +3,7 @@ package com.example.formmanagement.service;
 import com.example.formmanagement.domain.model.Field;
 import com.example.formmanagement.domain.request.RequestField;
 import com.example.formmanagement.domain.response.ResponseField;
+import com.example.formmanagement.mapper.FieldMapper;
 import com.example.formmanagement.repository.FieldRepository;
 import com.example.formmanagement.utils.exception.ExistException;
 import com.example.formmanagement.utils.exception.FieldValidationException;
@@ -14,12 +15,14 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class FieldService {
     FieldRepository fieldRepository;
+    FieldMapper fieldMapper;
 
     public void validateField(Field field, String value) throws FieldValidationException {
         switch (field.getType()){
@@ -33,15 +36,20 @@ public class FieldService {
     }
 
     public List<ResponseField> getAllResponse(){
-        return null;
+        List<Field> fields = fieldRepository.findAll();
+        return fields.stream().map(field -> fieldMapper.toResponseField(field))
+                .collect(Collectors.toList());
     }
 
     public ResponseField getSingleResponse(Long id){
-        return null;
+        Field field = fieldRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Cannot find Field.")
+        );
+        return fieldMapper.toResponseField(field);
     }
 
     public void addField(RequestField request){
-        Optional<Field> optField = fieldRepository.findByTitle(request.getLabel());
+        Optional<Field> optField = fieldRepository.findByLabel(request.getLabel());
         if (optField.isPresent()){
             throw new ExistException("Field already exist.");
         }

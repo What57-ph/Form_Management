@@ -2,10 +2,14 @@ package com.example.formmanagement.controller;
 
 import com.example.formmanagement.domain.request.RequestFieldDTO;
 import com.example.formmanagement.domain.request.RequestFormDTO;
+import com.example.formmanagement.domain.request.RequestSubmitDTO;
 import com.example.formmanagement.domain.response.ResponseFieldDTO;
 import com.example.formmanagement.domain.response.ResponseFormDTO;
+import com.example.formmanagement.domain.response.ResponseSubmitDTO;
 import com.example.formmanagement.domain.response.RestResponse;
 import com.example.formmanagement.service.FormService;
+import com.example.formmanagement.service.SubmissionService;
+import com.example.formmanagement.utils.exception.FieldValidationException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,7 @@ import java.util.List;
 @RequestMapping("api/v1/forms")
 public class FormController {
     FormService formService;
+    SubmissionService submissionService;
 
     @GetMapping("")
     public ResponseEntity<RestResponse<List<ResponseFormDTO>>> getAllForms() {
@@ -125,6 +130,19 @@ public class FormController {
                 .error(null)
                 .message("Fetch all forms successfully")
                 .data(formService.getActiveForms())
+                .build());
+    }
+
+    @PostMapping("/{id}/submit")
+    public ResponseEntity<RestResponse<ResponseSubmitDTO>> submitForm(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody RequestSubmitDTO dto
+            ) throws FieldValidationException {
+        return ResponseEntity.ok(RestResponse.<ResponseSubmitDTO>builder()
+                .statusCode(HttpStatus.OK.value())
+                .error(null)
+                .message("Fetch all forms successfully")
+                .data(submissionService.handleSubmitForm(id, dto))
                 .build());
     }
 

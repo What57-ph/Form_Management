@@ -11,6 +11,7 @@ import com.example.formmanagement.mapper.FormMapper;
 import com.example.formmanagement.repository.FieldRepository;
 import com.example.formmanagement.repository.FormRepository;
 import com.example.formmanagement.utils.enums.FormStatus;
+import com.example.formmanagement.utils.exception.ExistException;
 import com.example.formmanagement.utils.exception.NotFoundException;
 import com.example.formmanagement.utils.exception.RequestInvalidException;
 import lombok.AccessLevel;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +37,9 @@ public class FormService {
 
     @Transactional
     public ResponseFormDTO createForm(RequestFormDTO request) {
+        if (formRepository.existsByTitle(request.getTitle())){
+            throw new ExistException("Form title already exist");
+        }
         Form form;
         if (request.getOrder() != null && request.getTitle() != null && request.getDescription() != null){
             form = Form.builder()
@@ -100,9 +105,7 @@ public class FormService {
         Form form = formRepository.findById(formId).orElseThrow(
                 () -> new NotFoundException("Cannot find form")
         );
-        Field field = fieldRepository.findById(fieldId).orElseThrow(
-                () -> new NotFoundException("Cannot find field")
-        );
+        fieldService.findFieldById(fieldId);
 
         return fieldMapper.toResponseField(fieldService.updateField(requestFieldDTO, fieldId));
     }
@@ -111,9 +114,7 @@ public class FormService {
         Form form = formRepository.findById(formId).orElseThrow(
                 () -> new NotFoundException("Cannot find form")
         );
-        Field field = fieldRepository.findById(fieldId).orElseThrow(
-                () -> new NotFoundException("Cannot find field")
-        );
+        fieldService.findFieldById(fieldId);
         fieldService.deleteField(fieldId);
     }
 

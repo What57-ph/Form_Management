@@ -32,11 +32,14 @@ public class FieldMapper {
 
     public ResponseFieldDTO toResponseField(Field field){
         if (field == null) return null;
-        return modelMapper.map(field, ResponseFieldDTO.class);
+        ResponseFieldDTO dto = modelMapper.map(field, ResponseFieldDTO.class);
+        dto.setFieldId(field.getId());
+        return dto;
     }
 
     public Field toField(ResponseFieldDTO responseFieldDTO){
         Field field = modelMapper.map(responseFieldDTO, Field.class);
+        field.setId(responseFieldDTO.getFieldId());
         if (responseFieldDTO.getOptions() != null){
             field.setOptions(String.join(", ", responseFieldDTO.getOptions()));
         }

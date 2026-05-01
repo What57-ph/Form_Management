@@ -18,11 +18,11 @@ public class FieldValidator {
         try {
             number = Double.parseDouble(value);
         } catch (NumberFormatException e){
-            throw new FieldValidationException("Number Invalid.");
+            throw new FieldValidationException("Invalid number.");
         }
 
         if (number < 0 || number > 100){
-            throw new FieldValidationException("Number Invalid.");
+            throw new FieldValidationException("Invalid number.");
         }
     }
 
@@ -40,13 +40,11 @@ public class FieldValidator {
         }
     }
 
-    public static void validateSelect(Field field, String value) throws FieldValidationException {
-        String rawOptions = field.getOptions();
-        if (rawOptions == null || rawOptions.isBlank()){
+    public static void validateSelect(List<String> options, String value) throws FieldValidationException {
+
+        if (options == null || options.isEmpty()){
             throw new FieldValidationException("Field select has no option.");
         }
-
-        List<String> options = List.of(rawOptions.split(","));
 
         if (!options.contains(value.trim())){
             throw new FieldValidationException("Must choose 1 of available options.");

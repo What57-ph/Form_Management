@@ -2,6 +2,8 @@ package com.example.formmanagement.domain.model;
 
 import com.example.formmanagement.utils.enums.FieldType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,13 +13,15 @@ import java.util.List;
 @Entity(name = "fields")
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Field {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @NotBlank(message = "Label không được để trống")
+    @Size(max = 255, message = "Label không được vượt quá 255 ký tự")
     String label;
     @Enumerated(EnumType.STRING)
     FieldType type;

@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResponseFieldDTO {
-    Long id;
+    Long fieldId;
     String label;
     FieldType type;
     List<String> order;

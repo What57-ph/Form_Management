@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResponseFormDTO {
-    Long id;
+    Long formId;
     String title;
     String description;
     List<String> order;

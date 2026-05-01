@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface FormRepository extends JpaRepository<Form, Long> {
-    Optional<Form> findByTitle(String title);
+    boolean existsByTitle(String title);
     List<Form> findAllByStatus(FormStatus status);
 }

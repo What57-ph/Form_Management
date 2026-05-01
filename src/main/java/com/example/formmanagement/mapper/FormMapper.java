@@ -26,7 +26,7 @@ public class FormMapper {
         if (form == null) return null;
 
         ResponseFormDTO dto = modelMapper.map(form, ResponseFormDTO.class);
-
+        dto.setFormId(form.getId());
         if (form.getOrder() != null && !form.getOrder().isEmpty()) {
             dto.setOrder(Arrays.asList(form.getOrder().split(",")));
         } else {

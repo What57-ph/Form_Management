@@ -1,7 +1,6 @@
 package com.example.formmanagement.domain.response;
 
-import com.example.formmanagement.utils.enums.FieldType;
-import jakarta.annotation.Nullable;
+import com.example.formmanagement.utils.enums.FormStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,16 +9,17 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResponseField {
+public class ResponseFormDTO {
     Long id;
-    String label;
-    FieldType type;
+    String title;
+    String description;
     List<String> order;
-    Boolean required;
-    List<String> options;
+    FormStatus status;
     Instant createdAt;
     Instant updatedAt;
+    List<ResponseFieldDTO> responses;
+
 }

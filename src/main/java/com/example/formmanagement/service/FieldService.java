@@ -1,8 +1,8 @@
 package com.example.formmanagement.service;
 
 import com.example.formmanagement.domain.model.Field;
-import com.example.formmanagement.domain.request.RequestField;
-import com.example.formmanagement.domain.response.ResponseField;
+import com.example.formmanagement.domain.request.RequestFieldDTO;
+import com.example.formmanagement.domain.response.ResponseFieldDTO;
 import com.example.formmanagement.mapper.FieldMapper;
 import com.example.formmanagement.repository.FieldRepository;
 import com.example.formmanagement.utils.exception.ExistException;
@@ -35,20 +35,20 @@ public class FieldService {
         }
     }
 
-    public List<ResponseField> getAllResponse(){
+    public List<ResponseFieldDTO> getAllResponse(){
         List<Field> fields = fieldRepository.findAll();
         return fields.stream().map(field -> fieldMapper.toResponseField(field))
                 .collect(Collectors.toList());
     }
 
-    public ResponseField getSingleResponse(Long id){
+    public ResponseFieldDTO getSingleResponse(Long id){
         Field field = fieldRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Cannot find Field.")
         );
         return fieldMapper.toResponseField(field);
     }
 
-    public void addField(RequestField request){
+    public void addField(RequestFieldDTO request){
         Optional<Field> optField = fieldRepository.findByLabel(request.getLabel());
         if (optField.isPresent()){
             throw new ExistException("Field already exist.");
@@ -81,7 +81,7 @@ public class FieldService {
        fieldRepository.deleteById(id);
     }
 
-    public void updateField(RequestField request){
+    public void updateField(RequestFieldDTO request){
         if (request.getId() == null) {
             throw new RuntimeException("ID must not be null.");
         }

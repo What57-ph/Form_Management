@@ -1,7 +1,7 @@
 package com.example.formmanagement.mapper;
 
 import com.example.formmanagement.domain.model.Field;
-import com.example.formmanagement.domain.response.ResponseField;
+import com.example.formmanagement.domain.response.ResponseFieldDTO;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -18,7 +18,7 @@ public class FieldMapper {
     public FieldMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
 
-        TypeMap<Field, ResponseField> propertyMapper = this.modelMapper.createTypeMap(Field.class, ResponseField.class);
+        TypeMap<Field, ResponseFieldDTO> propertyMapper = this.modelMapper.createTypeMap(Field.class, ResponseFieldDTO.class);
 
         Converter<String, List<String>> stringToListConverter = context ->
                 context.getSource() != null
@@ -26,12 +26,12 @@ public class FieldMapper {
                         : Collections.emptyList();
 
         propertyMapper.addMappings(mapper ->
-                mapper.using(stringToListConverter).map(Field::getOrder, ResponseField::setOrder)
+                mapper.using(stringToListConverter).map(Field::getOrder, ResponseFieldDTO::setOrder)
         );
     }
 
-    public ResponseField toResponseField(Field field){
+    public ResponseFieldDTO toResponseField(Field field){
         if (field == null) return null;
-        return modelMapper.map(field, ResponseField.class);
+        return modelMapper.map(field, ResponseFieldDTO.class);
     }
 }

@@ -1,19 +1,18 @@
 package com.example.formmanagement.controller;
 
-import com.example.formmanagement.domain.request.RequestField;
-import com.example.formmanagement.domain.response.ResponseField;
+import com.example.formmanagement.domain.request.RequestFieldDTO;
+import com.example.formmanagement.domain.response.ResponseFieldDTO;
 import com.example.formmanagement.domain.response.RestResponse;
 import com.example.formmanagement.service.FieldService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,8 +22,8 @@ public class FieldController {
     FieldService fieldService;
 
     @GetMapping("")
-    public ResponseEntity<RestResponse<List<ResponseField>>> getAllFields() {
-        return ResponseEntity.ok(RestResponse.<List<ResponseField>>builder()
+    public ResponseEntity<RestResponse<List<ResponseFieldDTO>>> getAllFields() {
+        return ResponseEntity.ok(RestResponse.<List<ResponseFieldDTO>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
                 .message("Fetch successfully")
@@ -33,8 +32,8 @@ public class FieldController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestResponse<ResponseField>> getSingleField(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(RestResponse.<ResponseField>builder()
+    public ResponseEntity<RestResponse<ResponseFieldDTO>> getSingleField(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(RestResponse.<ResponseFieldDTO>builder()
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
                 .message("Fetch successfully")
@@ -54,8 +53,8 @@ public class FieldController {
     }
 
     @PutMapping("")
-    public ResponseEntity<RestResponse<Object>> updateField(@RequestBody RequestField requestField){
-        fieldService.updateField(requestField);
+    public ResponseEntity<RestResponse<Object>> updateField(@Valid @RequestBody RequestFieldDTO requestFieldDTO){
+        fieldService.updateField(requestFieldDTO);
         return ResponseEntity.ok(RestResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
@@ -65,8 +64,8 @@ public class FieldController {
     }
 
     @PostMapping("")
-    public ResponseEntity<RestResponse<Object>> createField(@RequestBody RequestField requestField){
-        fieldService.addField(requestField);
+    public ResponseEntity<RestResponse<Object>> createField(@Valid @RequestBody RequestFieldDTO requestFieldDTO){
+        fieldService.addField(requestFieldDTO);
         return ResponseEntity.ok(RestResponse.builder()
                 .statusCode(HttpStatus.CREATED.value())
                 .error(null)

@@ -1,0 +1,75 @@
+package com.example.formmanagement.controller;
+
+import com.example.formmanagement.domain.request.RequestFormDTO;
+import com.example.formmanagement.domain.response.ResponseFormDTO;
+import com.example.formmanagement.domain.response.RestResponse;
+import com.example.formmanagement.service.FormService;
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequestMapping("api/v1/forms")
+public class FormController {
+    FormService formService;
+
+    @GetMapping("")
+    public ResponseEntity<RestResponse<List<ResponseFormDTO>>> getAllForms() {
+        return ResponseEntity.ok(RestResponse.<List<ResponseFormDTO>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .error(null)
+                .message("Fetch all forms successfully")
+                .data(formService.getAllForms())
+                .build());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RestResponse<ResponseFormDTO>> getSingleForm(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(RestResponse.<ResponseFormDTO>builder()
+                .statusCode(HttpStatus.OK.value())
+                .error(null)
+                .message("Fetch form successfully")
+                .data(formService.getFormById(id))
+                .build());
+    }
+
+    @PostMapping("")
+    public ResponseEntity<RestResponse<ResponseFormDTO>> createForm(@Valid @RequestBody RequestFormDTO requestFormDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(RestResponse.<ResponseFormDTO>builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .error(null)
+                .message("Create form successfully")
+                .data(formService.createForm(requestFormDTO))
+                .build());
+    }
+
+    @PutMapping("")
+    public ResponseEntity<RestResponse<ResponseFormDTO>> updateForm(
+            @Valid @RequestBody RequestFormDTO requestFormDTO) {
+        return ResponseEntity.ok(RestResponse.<ResponseFormDTO>builder()
+                .statusCode(HttpStatus.OK.value())
+                .error(null)
+                .message("Update form successfully")
+                .data(formService.updateForm(requestFormDTO))
+                .build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<RestResponse<Object>> deleteForm(@PathVariable("id") Long id) {
+        formService.deleteForm(id);
+        return ResponseEntity.ok(RestResponse.builder()
+                .statusCode(HttpStatus.OK.value())
+                .error(null)
+                .message("Delete form successfully")
+                .data(null)
+                .build());
+    }
+}

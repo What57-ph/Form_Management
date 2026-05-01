@@ -1,10 +1,10 @@
-package com.example.formmanagement.domain.request;
+package com.example.formmanagement.domain.response;
 
 import com.example.formmanagement.utils.enums.FieldType;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -12,17 +12,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RequestField {
-    @Nullable
+public class ResponseFieldDTO {
     Long id;
-    @Nullable
     String label;
-    @Nullable
     FieldType type;
-    @Nullable
     List<String> order;
-    @Nullable
     Boolean required;
-    @Nullable
     List<String> options;
+    Instant createdAt;
+    Instant updatedAt;
 }

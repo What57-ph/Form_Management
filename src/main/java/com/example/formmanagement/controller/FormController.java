@@ -1,6 +1,8 @@
 package com.example.formmanagement.controller;
 
+import com.example.formmanagement.domain.request.RequestFieldDTO;
 import com.example.formmanagement.domain.request.RequestFormDTO;
+import com.example.formmanagement.domain.response.ResponseFieldDTO;
 import com.example.formmanagement.domain.response.ResponseFormDTO;
 import com.example.formmanagement.domain.response.RestResponse;
 import com.example.formmanagement.service.FormService;
@@ -51,14 +53,15 @@ public class FormController {
                 .build());
     }
 
-    @PutMapping("")
+    @PutMapping("/{id}")
     public ResponseEntity<RestResponse<ResponseFormDTO>> updateForm(
+            @PathVariable("id") Long id,
             @Valid @RequestBody RequestFormDTO requestFormDTO) {
         return ResponseEntity.ok(RestResponse.<ResponseFormDTO>builder()
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
                 .message("Update form successfully")
-                .data(formService.updateForm(requestFormDTO))
+                .data(formService.updateForm(requestFormDTO, id))
                 .build());
     }
 
@@ -72,4 +75,57 @@ public class FormController {
                 .data(null)
                 .build());
     }
+
+    @PostMapping("/{formId}/fields")
+    public ResponseEntity<RestResponse<Object>> addFieldToForm(
+            @PathVariable("formId") Long formId,
+            @Valid @RequestBody RequestFieldDTO requestFieldDTO
+            ) {
+        formService.addFieldToForm(formId, requestFieldDTO);
+        return ResponseEntity.ok(RestResponse.builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .error(null)
+                .message("Add field to form successfully")
+                .data(null)
+                .build());
+    }
+
+    @PutMapping("/{formId}/fields/{fieldId}")
+    public ResponseEntity<RestResponse<ResponseFieldDTO>> updateFieldOfForm(
+            @PathVariable("formId") Long formId,
+            @PathVariable("fieldId") Long fieldId,
+            @Valid @RequestBody RequestFieldDTO requestFieldDTO
+    ){
+        return ResponseEntity.ok(RestResponse.<ResponseFieldDTO>builder()
+                .statusCode(HttpStatus.OK.value())
+                .error(null)
+                .message("Update field of form successfully")
+                .data(formService.updateFieldOfForm(formId, fieldId, requestFieldDTO))
+                .build());
+    }
+
+    @DeleteMapping("/{formId}/fields/{fieldId}")
+    public ResponseEntity<RestResponse<Object>> deleteFieldOfForm(
+            @PathVariable("formId") Long formId,
+            @PathVariable("fieldId") Long fieldId
+    ){
+        formService.deleteFieldOfForm(formId, fieldId);
+        return ResponseEntity.ok(RestResponse.builder()
+                .statusCode(HttpStatus.OK.value())
+                .error(null)
+                .message("Delete field of form successfully")
+                .data(null)
+                .build());
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<RestResponse<List<ResponseFormDTO>>> getAllActiveForms() {
+        return ResponseEntity.ok(RestResponse.<List<ResponseFormDTO>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .error(null)
+                .message("Fetch all forms successfully")
+                .data(formService.getActiveForms())
+                .build());
+    }
+
 }

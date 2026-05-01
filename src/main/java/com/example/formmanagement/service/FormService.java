@@ -1,9 +1,14 @@
 package com.example.formmanagement.service;
 
+import com.example.formmanagement.domain.model.Field;
 import com.example.formmanagement.domain.model.Form;
+import com.example.formmanagement.domain.request.RequestFieldDTO;
 import com.example.formmanagement.domain.request.RequestFormDTO;
+import com.example.formmanagement.domain.response.ResponseFieldDTO;
 import com.example.formmanagement.domain.response.ResponseFormDTO;
+import com.example.formmanagement.mapper.FieldMapper;
 import com.example.formmanagement.mapper.FormMapper;
+import com.example.formmanagement.repository.FieldRepository;
 import com.example.formmanagement.repository.FormRepository;
 import com.example.formmanagement.utils.enums.FormStatus;
 import com.example.formmanagement.utils.exception.NotFoundException;
@@ -24,6 +29,9 @@ public class FormService {
 
     FormRepository formRepository;
     FormMapper formMapper;
+    FieldMapper fieldMapper;
+    FieldService fieldService;
+    FieldRepository fieldRepository;
 
     @Transactional
     public ResponseFormDTO createForm(RequestFormDTO request) {
@@ -55,12 +63,9 @@ public class FormService {
     }
 
     @Transactional
-    public ResponseFormDTO updateForm(RequestFormDTO request) {
-        if (request.getId() == null){
-            throw new RequestInvalidException("Updating request requires ID.");
-        }
-        Form form = formRepository.findById(request.getId())
-                .orElseThrow(() -> new NotFoundException("Form not found with id: " + request.getId()));
+    public ResponseFormDTO updateForm(RequestFormDTO request, Long id) {
+        Form form = formRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Form not found"));
         if (request.getTitle() != null) form.setTitle(request.getTitle());
 
         if (request.getDescription() != null) form.setDescription(request.getDescription());
@@ -75,8 +80,46 @@ public class FormService {
     @Transactional
     public void deleteForm(Long id) {
         if (!formRepository.existsById(id)) {
-            throw new NotFoundException("Form not found with id: " + id);
+            throw new NotFoundException("Form not found");
         }
         formRepository.deleteById(id);
+    }
+
+    @Transactional
+    public ResponseFormDTO addFieldToForm(Long formId, RequestFieldDTO requestFieldDTO){
+        Form form = formRepository.findById(formId).orElseThrow(
+                () -> new NotFoundException("Cannot find form")
+        );
+        Field field = fieldService.addField(requestFieldDTO);
+        fieldService.setFieldToForm(formId, field.getId());
+        return formMapper.toResponseFormDTO(form);
+    }
+
+    @Transactional
+    public ResponseFieldDTO updateFieldOfForm(Long formId, Long fieldId, RequestFieldDTO requestFieldDTO){
+        Form form = formRepository.findById(formId).orElseThrow(
+                () -> new NotFoundException("Cannot find form")
+        );
+        Field field = fieldRepository.findById(fieldId).orElseThrow(
+                () -> new NotFoundException("Cannot find field")
+        );
+
+        return fieldMapper.toResponseField(fieldService.updateField(requestFieldDTO, fieldId));
+    }
+
+    public void deleteFieldOfForm(Long formId, Long fieldId){
+        Form form = formRepository.findById(formId).orElseThrow(
+                () -> new NotFoundException("Cannot find form")
+        );
+        Field field = fieldRepository.findById(fieldId).orElseThrow(
+                () -> new NotFoundException("Cannot find field")
+        );
+        fieldService.deleteField(fieldId);
+    }
+
+    public List<ResponseFormDTO> getActiveForms(){
+        return formRepository.findAllByStatus(FormStatus.ACTIVE).stream().map(
+                formMapper::toResponseFormDTO
+        ).collect(Collectors.toList());
     }
 }

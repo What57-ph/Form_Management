@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("api/v1/field")
+@RequestMapping("api/v1/fields")
 public class FieldController {
     FieldService fieldService;
 
@@ -27,7 +27,7 @@ public class FieldController {
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
                 .message("Fetch successfully")
-                .data(fieldService.getAllResponse())
+                .data(fieldService.getAllFields())
                 .build());
     }
 
@@ -37,7 +37,7 @@ public class FieldController {
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
                 .message("Fetch successfully")
-                .data(fieldService.getSingleResponse(id))
+                .data(fieldService.getSingleField(id))
                 .build());
     }
 
@@ -52,9 +52,11 @@ public class FieldController {
                 .build());
     }
 
-    @PutMapping("")
-    public ResponseEntity<RestResponse<Object>> updateField(@Valid @RequestBody RequestFieldDTO requestFieldDTO){
-        fieldService.updateField(requestFieldDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<RestResponse<Object>> updateField(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody RequestFieldDTO requestFieldDTO){
+        fieldService.updateField(requestFieldDTO, id);
         return ResponseEntity.ok(RestResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
@@ -64,9 +66,9 @@ public class FieldController {
     }
 
     @PostMapping("")
-    public ResponseEntity<RestResponse<Object>> createField(@Valid @RequestBody RequestFieldDTO requestFieldDTO){
+    public ResponseEntity<RestResponse<ResponseFieldDTO>> createField(@Valid @RequestBody RequestFieldDTO requestFieldDTO){
         fieldService.addField(requestFieldDTO);
-        return ResponseEntity.ok(RestResponse.builder()
+        return ResponseEntity.ok(RestResponse.<ResponseFieldDTO>builder()
                 .statusCode(HttpStatus.CREATED.value())
                 .error(null)
                 .message("Create field successfully")

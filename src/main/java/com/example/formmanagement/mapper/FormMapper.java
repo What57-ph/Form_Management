@@ -37,7 +37,7 @@ public class FormMapper {
             List<ResponseFieldDTO> fieldResponses = form.getFields().stream()
                     .map(fieldMapper::toResponseField)
                     .collect(Collectors.toList());
-            dto.setResponses(fieldResponses);
+            dto.setFields(fieldResponses);
         }
 
         return dto;

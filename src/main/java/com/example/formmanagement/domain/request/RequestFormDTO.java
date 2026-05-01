@@ -14,8 +14,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestFormDTO {
-    @Nullable
-    Long id;
+
     @Nullable
     String title;
     @Nullable

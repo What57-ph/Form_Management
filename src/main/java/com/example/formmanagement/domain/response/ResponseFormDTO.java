@@ -20,6 +20,7 @@ public class ResponseFormDTO {
     FormStatus status;
     Instant createdAt;
     Instant updatedAt;
-    List<ResponseFieldDTO> responses;
+    List<ResponseFieldDTO> fields;
+//    List<ResponseFieldDTO> responses;
 
 }

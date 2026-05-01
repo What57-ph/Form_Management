@@ -34,4 +34,15 @@ public class FieldMapper {
         if (field == null) return null;
         return modelMapper.map(field, ResponseFieldDTO.class);
     }
+
+    public Field toField(ResponseFieldDTO responseFieldDTO){
+        Field field = modelMapper.map(responseFieldDTO, Field.class);
+        if (responseFieldDTO.getOptions() != null){
+            field.setOptions(String.join(", ", responseFieldDTO.getOptions()));
+        }
+        if (responseFieldDTO.getOrder() != null){
+            field.setOrder(String.join(", ", responseFieldDTO.getOrder()));
+        }
+        return field;
+    }
 }

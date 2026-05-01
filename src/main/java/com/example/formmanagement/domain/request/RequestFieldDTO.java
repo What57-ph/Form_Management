@@ -13,8 +13,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestFieldDTO {
     @Nullable
-    Long id;
-    @Nullable
     String label;
     @Nullable
     FieldType type;

@@ -1,10 +1,12 @@
 package com.example.formmanagement.service;
 
 import com.example.formmanagement.domain.model.Field;
+import com.example.formmanagement.domain.model.Form;
 import com.example.formmanagement.domain.request.RequestFieldDTO;
 import com.example.formmanagement.domain.response.ResponseFieldDTO;
 import com.example.formmanagement.mapper.FieldMapper;
 import com.example.formmanagement.repository.FieldRepository;
+import com.example.formmanagement.repository.FormRepository;
 import com.example.formmanagement.utils.exception.ExistException;
 import com.example.formmanagement.utils.exception.FieldValidationException;
 import com.example.formmanagement.utils.exception.NotFoundException;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FieldService {
     FieldRepository fieldRepository;
+    FormRepository formRepository;
     FieldMapper fieldMapper;
 
     public void validateField(Field field, String value) throws FieldValidationException {
@@ -35,20 +38,31 @@ public class FieldService {
         }
     }
 
-    public List<ResponseFieldDTO> getAllResponse(){
+    public List<ResponseFieldDTO> getAllFields(){
         List<Field> fields = fieldRepository.findAll();
-        return fields.stream().map(field -> fieldMapper.toResponseField(field))
+        return fields.stream().map(fieldMapper::toResponseField)
                 .collect(Collectors.toList());
     }
 
-    public ResponseFieldDTO getSingleResponse(Long id){
+    public ResponseFieldDTO getSingleField(Long id){
         Field field = fieldRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Cannot find Field.")
         );
         return fieldMapper.toResponseField(field);
     }
 
-    public void addField(RequestFieldDTO request){
+    public void setFieldToForm(Long formId, Long fieldId){
+        Form form = formRepository.findById(formId).orElseThrow(
+                () -> new NotFoundException("Cannot find form")
+        );
+        Field field = fieldRepository.findById(fieldId).orElseThrow(
+                () -> new NotFoundException("Cannot find field")
+        );
+        field.setForm(form);
+        fieldRepository.save(field);
+    }
+
+    public Field addField(RequestFieldDTO request){
         Optional<Field> optField = fieldRepository.findByLabel(request.getLabel());
         if (optField.isPresent()){
             throw new ExistException("Field already exist.");
@@ -70,8 +84,9 @@ public class FieldService {
                 field.setOptions(String.join(", ", request.getOptions()));
 
             }
-            fieldRepository.save(field);
+            return fieldRepository.save(field);
         }
+        return null;
     }
 
     public void deleteField(Long id){
@@ -81,11 +96,8 @@ public class FieldService {
        fieldRepository.deleteById(id);
     }
 
-    public void updateField(RequestFieldDTO request){
-        if (request.getId() == null) {
-            throw new RuntimeException("ID must not be null.");
-        }
-        Field field = fieldRepository.findById(request.getId()).orElseThrow(
+    public Field updateField(RequestFieldDTO request, Long id){
+        Field field = fieldRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Cannot find field.")
         );
         if (request.getOptions() != null) {
@@ -103,6 +115,6 @@ public class FieldService {
         if (request.getType() != null){
             field.setType(request.getType());
         }
-        fieldRepository.save(field);
+        return fieldRepository.save(field);
     }
 }

@@ -22,7 +22,7 @@ public class FieldMapper {
 
         Converter<String, List<String>> stringToListConverter = context ->
                 context.getSource() != null
-                        ? Arrays.asList(context.getSource().split(", "))
+                        ? Arrays.asList(context.getSource().split("; "))
                         : Collections.emptyList();
 
         propertyMapper.addMappings(mapper ->
@@ -41,10 +41,10 @@ public class FieldMapper {
         Field field = modelMapper.map(responseFieldDTO, Field.class);
         field.setId(responseFieldDTO.getFieldId());
         if (responseFieldDTO.getOptions() != null){
-            field.setOptions(String.join(", ", responseFieldDTO.getOptions()));
+            field.setOptions(String.join("; ", responseFieldDTO.getOptions()));
         }
         if (responseFieldDTO.getOrder() != null){
-            field.setOrder(String.join(", ", responseFieldDTO.getOrder()));
+            field.setOrder(String.join("; ", responseFieldDTO.getOrder()));
         }
         return field;
     }

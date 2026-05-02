@@ -52,7 +52,7 @@ public class FieldController {
                 .build());
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<RestResponse<Object>> updateField(
             @PathVariable("id") Long id,
             @Valid @RequestBody RequestFieldDTO requestFieldDTO){

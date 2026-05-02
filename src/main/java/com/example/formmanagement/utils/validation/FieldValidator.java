@@ -21,7 +21,7 @@ public class FieldValidator {
             throw new FieldValidationException("Invalid number.");
         }
 
-        if (number < 0 || number > 100){
+        if (Double.isNaN(number) || Double.isInfinite(number) || number < 0 || number > 100){
             throw new FieldValidationException("Invalid number.");
         }
     }

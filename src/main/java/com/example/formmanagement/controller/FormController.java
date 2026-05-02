@@ -58,7 +58,7 @@ public class FormController {
                 .build());
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<RestResponse<ResponseFormDTO>> updateForm(
             @PathVariable("id") Long id,
             @Valid @RequestBody RequestFormDTO requestFormDTO) {
@@ -84,9 +84,9 @@ public class FormController {
     @PostMapping("/{formId}/fields")
     public ResponseEntity<RestResponse<Object>> addFieldToForm(
             @PathVariable("formId") Long formId,
-            @Valid @RequestBody RequestFieldDTO requestFieldDTO
+            @Valid @RequestBody List<RequestFieldDTO> requestFieldDTOs
             ) {
-        formService.addFieldToForm(formId, requestFieldDTO);
+        formService.addFieldsToForm(formId, requestFieldDTOs);
         return ResponseEntity.ok(RestResponse.builder()
                 .statusCode(HttpStatus.CREATED.value())
                 .error(null)
@@ -95,7 +95,7 @@ public class FormController {
                 .build());
     }
 
-    @PutMapping("/{formId}/fields/{fieldId}")
+    @PatchMapping("/{formId}/fields/{fieldId}")
     public ResponseEntity<RestResponse<ResponseFieldDTO>> updateFieldOfForm(
             @PathVariable("formId") Long formId,
             @PathVariable("fieldId") Long fieldId,

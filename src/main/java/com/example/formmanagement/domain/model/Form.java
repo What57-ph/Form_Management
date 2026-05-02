@@ -25,10 +25,10 @@ public class Form {
     @Enumerated(EnumType.STRING)
     FormStatus status;
 
-    @OneToMany(mappedBy = "form")
+    @OneToMany(mappedBy = "form", cascade = CascadeType.REMOVE)
     List<Field> fields;
 
-    @OneToMany(mappedBy = "form")
+    @OneToMany(mappedBy = "form", cascade = CascadeType.REMOVE)
     List<Submission> submissions;
 
     @Column(name = "created_at")

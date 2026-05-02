@@ -7,7 +7,6 @@ import com.example.formmanagement.domain.model.SubmissionValue;
 import com.example.formmanagement.domain.request.RequestSubmitDTO;
 import com.example.formmanagement.domain.response.ResponseSubmitDTO;
 import com.example.formmanagement.mapper.SubmissionMapper;
-import com.example.formmanagement.repository.FieldRepository;
 import com.example.formmanagement.repository.FormRepository;
 import com.example.formmanagement.repository.SubmissionRepository;
 import com.example.formmanagement.repository.SubmissionValueRepository;
@@ -42,25 +41,22 @@ public class SubmissionService {
                 .map(Field::getId)
                 .collect(Collectors.toList());
 
-        for (RequestSubmitDTO.FieldValue reqField : requestSubmitDTO.getFieldValueList()) {
-
-            if (!validFieldIds.contains(reqField.getFieldId())) {
-                throw new FieldValidationException("Field ID " + reqField.getFieldId() + " does not belong to this form.");
-            }
-
-            fieldService.validateField(reqField.getFieldType(), reqField.getValue(), reqField.getOptions());
-        }
 
         Submission submission = submissionRepository.save(Submission.builder().form(form).build());
         List<SubmissionValue> submissionValues = new LinkedList<>();
         for (RequestSubmitDTO.FieldValue reqField : requestSubmitDTO.getFieldValueList()) {
+            if (!validFieldIds.contains(reqField.getFieldId())) {
+                throw new FieldValidationException("Field ID " + reqField.getFieldId() + " does not belong to this form.");
+            }
             Field fieldEntity = fieldService.findFieldById(reqField.getFieldId());
 
             if (!fieldEntity.getType().equals(reqField.getFieldType())) {
-                throw new FieldValidationException("Type mismatch for field: " + fieldEntity.getLabel());
+                throw new FieldValidationException("Type of field with id "+ reqField.getFieldId()+ " is mismatch");
             }
-
-
+            fieldService.validateField(reqField.getFieldType(), reqField.getValue(), Arrays.stream(fieldEntity.getOptions().split("; ")).toList());
+            if (fieldEntity.getRequired() && (reqField.getValue() == null || reqField.getValue().isEmpty())){
+                throw new FieldValidationException("Field value cannot be empty when required");
+            }
                 submissionValues.add(submissionValueRepository.save(SubmissionValue.builder()
                         .submission(submission)
                         .value(reqField.getValue())

@@ -20,6 +20,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class FormService {
                     .title(request.getTitle())
                     .description(request.getDescription())
                     .status(FormStatus.ACTIVE)
-                    .order(String.join(",", request.getOrder()))
+                    .order(String.join("; ", request.getOrder()))
                     .build();
         } else {
             throw new RequestInvalidException("All form attributes are required.");
@@ -75,7 +76,7 @@ public class FormService {
 
         if (request.getDescription() != null) form.setDescription(request.getDescription());
 
-        if (request.getOrder() != null) form.setOrder(String.join(", ", request.getOrder()));
+        if (request.getOrder() != null) form.setOrder(String.join("; ", request.getOrder()));
 
         if (request.getStatus() != null) form.setStatus(request.getStatus());
 
@@ -91,13 +92,33 @@ public class FormService {
     }
 
     @Transactional
-    public ResponseFormDTO addFieldToForm(Long formId, RequestFieldDTO requestFieldDTO){
-        Form form = formRepository.findById(formId).orElseThrow(
-                () -> new NotFoundException("Cannot find form")
-        );
-        Field field = fieldService.addField(requestFieldDTO);
-        fieldService.setFieldToForm(formId, field.getId());
-        return formMapper.toResponseFormDTO(form);
+    public List<ResponseFormDTO> addFieldsToForm(Long formId, List<RequestFieldDTO> requestFieldDTOs) {
+
+        Form form = formRepository.findById(formId)
+                .orElseThrow(() -> new NotFoundException("Cannot find form"));
+
+        List<Field> fields = new ArrayList<>();
+
+        for (RequestFieldDTO dto : requestFieldDTOs) {
+
+            Field field = Field.builder()
+                    .label(dto.getLabel())
+                    .type(dto.getType())
+                    .required(dto.getRequired())
+                    .order(dto.getOrder() != null ? String.join("; ", dto.getOrder()) : null)
+                    .options(dto.getOptions() != null ? String.join("; ", dto.getOptions()) : null)
+                    .form(form)
+                    .build();
+
+            fields.add(field);
+        }
+
+        fieldRepository.saveAll(fields);
+
+        Form updatedForm = formRepository.findById(formId)
+                .orElseThrow(() -> new NotFoundException("Cannot find form"));
+
+        return List.of(formMapper.toResponseFormDTO(updatedForm));
     }
 
     @Transactional

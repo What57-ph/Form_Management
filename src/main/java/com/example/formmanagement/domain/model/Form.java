@@ -21,11 +21,12 @@ public class Form {
     String title;
     String description;
     @Column(name = "order_display")
-    String order;
+    Integer order;
     @Enumerated(EnumType.STRING)
     FormStatus status;
 
     @OneToMany(mappedBy = "form", cascade = CascadeType.REMOVE)
+    @OrderBy("order ASC")
     List<Field> fields;
 
     @OneToMany(mappedBy = "form", cascade = CascadeType.REMOVE)

@@ -27,8 +27,7 @@ public class Field {
     FieldType type;
 
     @Column(name = "order_display")
-
-    String order;
+    Integer order;
 
     Boolean required;
 

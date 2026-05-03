@@ -4,11 +4,11 @@ import com.example.formmanagement.domain.model.Field;
 import com.example.formmanagement.domain.model.Form;
 import com.example.formmanagement.domain.request.RequestFieldDTO;
 import com.example.formmanagement.domain.response.ResponseFieldDTO;
+import com.example.formmanagement.domain.response.ResponsePaginationDTO;
 import com.example.formmanagement.mapper.FieldMapper;
 import com.example.formmanagement.repository.FieldRepository;
 import com.example.formmanagement.repository.FormRepository;
 import com.example.formmanagement.utils.enums.FieldType;
-import com.example.formmanagement.utils.exception.ExistException;
 import com.example.formmanagement.utils.exception.FieldValidationException;
 import com.example.formmanagement.utils.exception.NotFoundException;
 import com.example.formmanagement.utils.exception.RequestInvalidException;
@@ -16,11 +16,13 @@ import com.example.formmanagement.utils.validation.FieldValidator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,11 +55,22 @@ public class FieldService {
         );
     }
 
-    public List<ResponseFieldDTO> getAllFields() {
-        List<Field> fields = fieldRepository.findAll();
-        return fields.stream().map(fieldMapper::toResponseField)
-                .collect(Collectors.toList());
+    public ResponsePaginationDTO getAllFields(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber,pageSize, Sort.by("order").ascending());
+        Page<Field> fieldPage = fieldRepository.findAll(pageable);
+        return ResponsePaginationDTO.builder()
+                .meta(ResponsePaginationDTO.Meta.builder()
+                        .page(pageable.getPageNumber())
+                        .pageSize(pageable.getPageSize())
+                        .pages(fieldPage.getTotalPages())
+                        .total(fieldPage.getTotalElements())
+                        .build())
+                .result(fieldPage.getContent().stream()
+                        .map(fieldMapper::toResponseField)
+                        .toList())
+                .build();
     }
+
 
     public ResponseFieldDTO getSingleField(Long id) {
         Field field = findFieldById(id);
@@ -84,7 +97,8 @@ public class FieldService {
                     .label(request.getLabel())
                     .type(request.getType())
                     .required(request.getRequired())
-                    .order(String.join("; ", request.getOrder()))
+//                    .order(String.join("; ", request.getOrder()))
+                    .order(request.getOrder())
                     .build();
         } else {
             throw new RequestInvalidException("All fields should be filled.");
@@ -108,7 +122,8 @@ public class FieldService {
             field.setOptions(String.join("; ", request.getOptions()));
         }
         if (request.getOrder() != null) {
-            field.setOrder(String.join("; ", request.getOrder()));
+//            field.setOrder(String.join("; ", request.getOrder()));
+            field.setOrder(request.getOrder());
         }
         if (request.getLabel() != null) {
             field.setLabel(request.getLabel());

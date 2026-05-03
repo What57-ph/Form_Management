@@ -19,7 +19,7 @@ public class RequestFormDTO {
     @Nullable
     String description;
     @Nullable
-    List<String> order;
+    Integer order;
     @Nullable
     FormStatus status;
     Instant createdAt;

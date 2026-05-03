@@ -16,7 +16,7 @@ public class ResponseFormDTO {
     Long formId;
     String title;
     String description;
-    List<String> order;
+    Integer order;
     FormStatus status;
     Instant createdAt;
     Instant updatedAt;

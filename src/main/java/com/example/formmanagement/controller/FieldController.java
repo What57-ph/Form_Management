@@ -2,6 +2,7 @@ package com.example.formmanagement.controller;
 
 import com.example.formmanagement.domain.request.RequestFieldDTO;
 import com.example.formmanagement.domain.response.ResponseFieldDTO;
+import com.example.formmanagement.domain.response.ResponsePaginationDTO;
 import com.example.formmanagement.domain.response.RestResponse;
 import com.example.formmanagement.service.FieldService;
 import jakarta.validation.Valid;
@@ -22,12 +23,15 @@ public class FieldController {
     FieldService fieldService;
 
     @GetMapping("")
-    public ResponseEntity<RestResponse<List<ResponseFieldDTO>>> getAllFields() {
-        return ResponseEntity.ok(RestResponse.<List<ResponseFieldDTO>>builder()
+    public ResponseEntity<RestResponse<ResponsePaginationDTO>> getAllFields(
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(RestResponse.<ResponsePaginationDTO>builder()
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
                 .message("Fetch successfully")
-                .data(fieldService.getAllFields())
+                .data(fieldService.getAllFields(pageNumber, pageSize))
                 .build());
     }
 

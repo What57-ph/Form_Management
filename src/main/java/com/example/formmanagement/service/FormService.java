@@ -21,6 +21,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,16 +43,17 @@ public class FormService {
 
     @Transactional
     public ResponseFormDTO createForm(RequestFormDTO request) {
-        if (formRepository.existsByTitle(request.getTitle())){
+        if (formRepository.existsByTitle(request.getTitle())) {
             throw new ExistException("Form title already exist");
         }
         Form form;
-        if (request.getOrder() != null && request.getTitle() != null && request.getDescription() != null){
+        if (request.getOrder() != 0 && request.getTitle() != null && request.getDescription() != null) {
             form = Form.builder()
                     .title(request.getTitle())
                     .description(request.getDescription())
                     .status(FormStatus.ACTIVE)
-                    .order(String.join("; ", request.getOrder()))
+//                    .order(String.join("; ", request.getOrder()))
+                    .order(request.getOrder())
                     .build();
         } else {
             throw new RequestInvalidException("All form attributes are required.");
@@ -61,7 +63,7 @@ public class FormService {
     }
 
     public ResponsePaginationDTO getAllForms(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("order").ascending());
 
         Page<Form> formPage = formRepository.findAll(pageable);
 
@@ -92,7 +94,8 @@ public class FormService {
 
         if (request.getDescription() != null) form.setDescription(request.getDescription());
 
-        if (request.getOrder() != null) form.setOrder(String.join("; ", request.getOrder()));
+//        if (request.getOrder() != null) form.setOrder(String.join("; ", request.getOrder()));
+        if (request.getOrder() != null) form.setOrder(request.getOrder());
 
         if (request.getStatus() != null) form.setStatus(request.getStatus());
 
@@ -121,7 +124,10 @@ public class FormService {
                     .label(dto.getLabel())
                     .type(dto.getType())
                     .required(dto.getRequired())
-                    .order(dto.getOrder() != null ? String.join("; ", dto.getOrder()) : null)
+                    .order(dto.getOrder() != null
+//                            String.join("; ", dto.getOrder())
+                            ? dto.getOrder()
+                            : null)
                     .options(dto.getOptions() != null ? String.join("; ", dto.getOptions()) : null)
                     .form(form)
                     .build();
@@ -138,7 +144,7 @@ public class FormService {
     }
 
     @Transactional
-    public ResponseFieldDTO updateFieldOfForm(Long formId, Long fieldId, RequestFieldDTO requestFieldDTO){
+    public ResponseFieldDTO updateFieldOfForm(Long formId, Long fieldId, RequestFieldDTO requestFieldDTO) {
         Form form = formRepository.findById(formId).orElseThrow(
                 () -> new NotFoundException("Cannot find form")
         );
@@ -147,7 +153,7 @@ public class FormService {
         return fieldMapper.toResponseField(fieldService.updateField(requestFieldDTO, fieldId));
     }
 
-    public void deleteFieldOfForm(Long formId, Long fieldId){
+    public void deleteFieldOfForm(Long formId, Long fieldId) {
         Form form = formRepository.findById(formId).orElseThrow(
                 () -> new NotFoundException("Cannot find form")
         );
@@ -155,8 +161,8 @@ public class FormService {
         fieldService.deleteField(fieldId);
     }
 
-    public ResponsePaginationDTO getActiveForms(int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public ResponsePaginationDTO getActiveForms(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("order").ascending());
         Page<Form> formPage = formRepository.findAllByStatus(FormStatus.ACTIVE, pageable);
 
         return ResponsePaginationDTO.builder()

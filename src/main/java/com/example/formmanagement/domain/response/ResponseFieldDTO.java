@@ -16,7 +16,7 @@ public class ResponseFieldDTO {
     Long fieldId;
     String label;
     FieldType type;
-    List<String> order;
+    Integer order;
     Boolean required;
     List<String> options;
     Instant createdAt;

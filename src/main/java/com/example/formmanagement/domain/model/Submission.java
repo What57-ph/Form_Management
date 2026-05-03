@@ -3,6 +3,7 @@ package com.example.formmanagement.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 import java.util.List;
 import java.time.Instant;
 
@@ -32,7 +33,7 @@ public class Submission {
     Instant submitAt;
 
     @PrePersist
-    public void handleBeforeSubmit(){
+    public void handleBeforeSubmit() {
         this.submitAt = Instant.now();
     }
 }

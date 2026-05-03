@@ -17,13 +17,10 @@ public class RequestFieldDTO {
     @Nullable
     @Size(min = 2, max = 255, message = "Label must not exceed 255 characters")
     String label;
-
     @Nullable
     FieldType type;
-
     @Nullable
-    @Size(min = 1, message = "Order must not be empty")
-    List<String> order;
+    Integer order;
     @Nullable
     Boolean required;
     @Nullable

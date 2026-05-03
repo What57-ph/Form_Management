@@ -104,8 +104,10 @@ public class FormService {
 
     @Transactional
     public void deleteForm(Long id) {
-        if (!formRepository.existsById(id)) {
-            throw new NotFoundException("Form not found");
+        Form form = formRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Form not found"));
+        if (form.getSubmissions() != null && !form.getSubmissions().isEmpty()) {
+            throw new RequestInvalidException("Cannot delete form that has been submitted by employee");
         }
         formRepository.deleteById(id);
     }
@@ -148,8 +150,10 @@ public class FormService {
         Form form = formRepository.findById(formId).orElseThrow(
                 () -> new NotFoundException("Cannot find form")
         );
-        fieldService.findFieldById(fieldId);
-
+        Field field = fieldService.findFieldById(fieldId);
+        if (!field.getForm().getId().equals(formId)) {
+            throw new RequestInvalidException("Field with id " + fieldId + " does not belong to this form");
+        }
         return fieldMapper.toResponseField(fieldService.updateField(requestFieldDTO, fieldId));
     }
 
@@ -157,7 +161,17 @@ public class FormService {
         Form form = formRepository.findById(formId).orElseThrow(
                 () -> new NotFoundException("Cannot find form")
         );
-        fieldService.findFieldById(fieldId);
+
+        Field field = fieldService.findFieldById(fieldId);
+
+        if (!field.getForm().getId().equals(formId)) {
+            throw new RequestInvalidException("Field with id " + fieldId + " does not belong to this form");
+        }
+
+        if (field.getSubmissionValues() != null && !field.getSubmissionValues().isEmpty()) {
+            throw new RequestInvalidException("Cannot delete field that has data submitted by employee");
+        }
+
         fieldService.deleteField(fieldId);
     }
 

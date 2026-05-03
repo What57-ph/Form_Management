@@ -35,6 +35,7 @@ public class SubmissionMapper {
                             ResponseSubmitValueDTO.builder()
                                     .submitValueId(value.getId())
                                     .value(value.getValue())
+                                    .fieldId(value.getField().getId())
                                     .fieldLabel(value.getField().getLabel())
                                     .build()
                     ).collect(Collectors.toList())

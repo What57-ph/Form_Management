@@ -35,6 +35,7 @@ public class Field {
 
     @ManyToOne
     @JoinColumn(name = "form_id")
+    @EqualsAndHashCode.Exclude
     Form form;
 
     @OneToMany(mappedBy = "field")

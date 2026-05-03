@@ -26,7 +26,7 @@ public class Submission {
     @JoinColumn(name = "form_id")
     Form form;
 
-    @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SubmissionValue> submissionValues;
 
     @Column(name = "submit_at")

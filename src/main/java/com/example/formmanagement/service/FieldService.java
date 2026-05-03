@@ -112,7 +112,10 @@ public class FieldService {
     }
 
     public void deleteField(Long id) {
-        findFieldById(id);
+        Field field = findFieldById(id);
+        if (field.getSubmissionValues() != null && !field.getSubmissionValues().isEmpty()) {
+            throw new RequestInvalidException("Cannot delete field that has data submitted by employee");
+        }
         fieldRepository.deleteById(id);
     }
 

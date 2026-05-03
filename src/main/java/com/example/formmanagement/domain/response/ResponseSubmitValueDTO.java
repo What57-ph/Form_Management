@@ -11,5 +11,6 @@ import lombok.experimental.FieldDefaults;
 public class ResponseSubmitValueDTO {
     Long submitValueId;
     String value;
+    Long fieldId;
     String fieldLabel;
 }

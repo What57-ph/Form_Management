@@ -25,11 +25,12 @@ public class Form {
     @Enumerated(EnumType.STRING)
     FormStatus status;
 
-    @OneToMany(mappedBy = "form", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("order ASC")
+    @EqualsAndHashCode.Exclude
     List<Field> fields;
 
-    @OneToMany(mappedBy = "form", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "form")
     List<Submission> submissions;
 
     @Column(name = "created_at")

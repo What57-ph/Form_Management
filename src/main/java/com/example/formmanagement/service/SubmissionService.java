@@ -5,6 +5,7 @@ import com.example.formmanagement.domain.model.Form;
 import com.example.formmanagement.domain.model.Submission;
 import com.example.formmanagement.domain.model.SubmissionValue;
 import com.example.formmanagement.domain.request.RequestSubmitDTO;
+import com.example.formmanagement.domain.response.ResponsePaginationDTO;
 import com.example.formmanagement.domain.response.ResponseSubmitDTO;
 import com.example.formmanagement.mapper.SubmissionMapper;
 import com.example.formmanagement.repository.FormRepository;
@@ -16,6 +17,9 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -42,7 +46,7 @@ public class SubmissionService {
                 .collect(Collectors.toList());
 
 
-        Submission submission = submissionRepository.save(Submission.builder().form(form).build());
+        Submission submission = Submission.builder().form(form).build();
         List<SubmissionValue> submissionValues = new LinkedList<>();
         for (RequestSubmitDTO.FieldValue reqField : requestSubmitDTO.getFieldValueList()) {
             if (!validFieldIds.contains(reqField.getFieldId())) {
@@ -66,12 +70,23 @@ public class SubmissionService {
 
         }
         submission.setSubmissionValues(submissionValues);
-        return submissionMapper.toResponseSubmitDTO(submission);
+        return submissionMapper.toResponseSubmitDTO(submissionRepository.save(submission));
     }
 
-    public List<ResponseSubmitDTO> getSubmittedForm(){
-        List<Submission> submissions = submissionRepository.findAll();
-        return submissions.stream().map(submissionMapper::toResponseSubmitDTO)
-                .collect(Collectors.toList());
+    public ResponsePaginationDTO getSubmittedForm(int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Submission> submissionPage = submissionRepository.findAll(pageable);
+
+        return ResponsePaginationDTO.builder()
+                .meta(ResponsePaginationDTO.Meta.builder()
+                        .page(pageable.getPageNumber())
+                        .pageSize(pageable.getPageSize())
+                        .total(submissionPage.getTotalPages())
+                        .pages(submissionPage.getTotalPages())
+                        .build())
+                .result(submissionPage.getContent().stream()
+                        .map(submissionMapper::toResponseSubmitDTO)
+                        .toList())
+                .build();
     }
 }

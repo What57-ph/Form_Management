@@ -6,6 +6,7 @@ import com.example.formmanagement.domain.request.RequestFieldDTO;
 import com.example.formmanagement.domain.request.RequestFormDTO;
 import com.example.formmanagement.domain.response.ResponseFieldDTO;
 import com.example.formmanagement.domain.response.ResponseFormDTO;
+import com.example.formmanagement.domain.response.ResponsePaginationDTO;
 import com.example.formmanagement.mapper.FieldMapper;
 import com.example.formmanagement.mapper.FormMapper;
 import com.example.formmanagement.repository.FieldRepository;
@@ -17,6 +18,9 @@ import com.example.formmanagement.utils.exception.RequestInvalidException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,10 +60,22 @@ public class FormService {
         return formMapper.toResponseFormDTO(formRepository.save(form));
     }
 
-    public List<ResponseFormDTO> getAllForms() {
-        return formRepository.findAll().stream()
-                .map(formMapper::toResponseFormDTO)
-                .collect(Collectors.toList());
+    public ResponsePaginationDTO getAllForms(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<Form> formPage = formRepository.findAll(pageable);
+
+        return ResponsePaginationDTO.builder()
+                .meta(ResponsePaginationDTO.Meta.builder()
+                        .page(pageable.getPageNumber())
+                        .pageSize(pageable.getPageSize())
+                        .pages(formPage.getTotalPages())
+                        .total(formPage.getTotalElements())
+                        .build())
+                .result(formPage.getContent().stream()
+                        .map(formMapper::toResponseFormDTO)
+                        .toList())
+                .build();
     }
 
     public ResponseFormDTO getFormById(Long id) {
@@ -139,9 +155,20 @@ public class FormService {
         fieldService.deleteField(fieldId);
     }
 
-    public List<ResponseFormDTO> getActiveForms(){
-        return formRepository.findAllByStatus(FormStatus.ACTIVE).stream().map(
-                formMapper::toResponseFormDTO
-        ).collect(Collectors.toList());
+    public ResponsePaginationDTO getActiveForms(int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Form> formPage = formRepository.findAllByStatus(FormStatus.ACTIVE, pageable);
+
+        return ResponsePaginationDTO.builder()
+                .meta(ResponsePaginationDTO.Meta.builder()
+                        .page(pageable.getPageNumber())
+                        .pageSize(pageable.getPageSize())
+                        .pages(formPage.getTotalPages())
+                        .total(formPage.getTotalElements())
+                        .build())
+                .result(formPage.getContent().stream()
+                        .map(formMapper::toResponseFormDTO)
+                        .toList())
+                .build();
     }
 }

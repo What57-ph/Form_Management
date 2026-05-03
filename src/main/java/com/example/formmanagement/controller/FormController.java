@@ -3,10 +3,7 @@ package com.example.formmanagement.controller;
 import com.example.formmanagement.domain.request.RequestFieldDTO;
 import com.example.formmanagement.domain.request.RequestFormDTO;
 import com.example.formmanagement.domain.request.RequestSubmitDTO;
-import com.example.formmanagement.domain.response.ResponseFieldDTO;
-import com.example.formmanagement.domain.response.ResponseFormDTO;
-import com.example.formmanagement.domain.response.ResponseSubmitDTO;
-import com.example.formmanagement.domain.response.RestResponse;
+import com.example.formmanagement.domain.response.*;
 import com.example.formmanagement.service.FormService;
 import com.example.formmanagement.service.SubmissionService;
 import com.example.formmanagement.utils.exception.FieldValidationException;
@@ -29,12 +26,15 @@ public class FormController {
     SubmissionService submissionService;
 
     @GetMapping("")
-    public ResponseEntity<RestResponse<List<ResponseFormDTO>>> getAllForms() {
-        return ResponseEntity.ok(RestResponse.<List<ResponseFormDTO>>builder()
+    public ResponseEntity<RestResponse<ResponsePaginationDTO>> getAllForms(
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(RestResponse.<ResponsePaginationDTO>builder()
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
                 .message("Fetch all forms successfully")
-                .data(formService.getAllForms())
+                .data(formService.getAllForms(pageNumber, pageSize))
                 .build());
     }
 
@@ -124,12 +124,15 @@ public class FormController {
     }
 
     @GetMapping("/active")
-    public ResponseEntity<RestResponse<List<ResponseFormDTO>>> getAllActiveForms() {
-        return ResponseEntity.ok(RestResponse.<List<ResponseFormDTO>>builder()
+    public ResponseEntity<RestResponse<ResponsePaginationDTO>> getAllActiveForms(
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(RestResponse.<ResponsePaginationDTO>builder()
                 .statusCode(HttpStatus.OK.value())
                 .error(null)
-                .message("Fetch all forms successfully")
-                .data(formService.getActiveForms())
+                .message("Fetch all active forms successfully")
+                .data(formService.getActiveForms(pageNumber, pageSize))
                 .build());
     }
 

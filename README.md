@@ -23,7 +23,7 @@ docker compose up --build
 ```bash
 Lưu ý: - Port Mysql có thể không đúng hoặc đang được sử dụng tùy máy, thay đổi theo máy cá nhân 
        - Khi không dùng docker, datasource url đổi từ "db" thành "localhost"
-       - Datasource name và password khác nhau tùy máy
+       - Datasource name và password khi chạy không dùng docker khác nhau tùy máy
 ```
 Ứng dụng chạy tại: `http://localhost:8080`
 

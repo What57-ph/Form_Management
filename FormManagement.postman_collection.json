@@ -1,0 +1,480 @@
+{
+  "info": {
+    "_postman_id": "676d95c3-e16d-4fc9-9a64-27c5c59066c8",
+    "name": "FormManagement",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "42224541"
+  },
+  "item": [
+    {
+      "name": "field",
+      "item": [
+        {
+          "name": "get all",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\":1,\r\n    \"title\":\"abcde\",\r\n    \"description\":\"abcdeasdasdkl\",\r\n    \"order\":[\"number\", \"id\"],\r\n    \"status\":\"DRAFT\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/fields",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "fields"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"label\":\"Name\",\r\n    \"type\":\"TEXT\",\r\n    \"order\":1,\r\n    \"required\":true,\r\n    \"options\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/fields",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "fields"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"label\":\"Employee Name\",\r\n    \"type\":\"TEXT\",\r\n    \"order\":1,\r\n    \"required\":true,\r\n    \"options\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/fields/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "fields",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get one",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/fields/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "fields",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/fields/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "fields",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "form",
+      "item": [
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Request for coming late 04/05/2026\",\r\n  \"description\": \"Employee can request for coming late\",\r\n  \"order\": 4\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms?pageNumber=0&pageSize=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms"
+              ],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "0"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get one",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\":1,\r\n    \"title\":\"abcde\",\r\n    \"description\":\"abcdeasdasdkl\",\r\n    \"order\":[\"number\", \"id\"],\r\n    \"status\":\"DRAFT\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Request for coming late 04/05/2026\",\r\n    \"description\":\"abcdeasdasdkl\",\r\n    \"order\":2,\r\n    \"status\":\"DRAFT\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\":1,\r\n    \"title\":\"abcde\",\r\n    \"description\":\"abcdeasdasdkl\",\r\n    \"order\":[\"number\", \"id\"],\r\n    \"status\":\"DRAFT\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "add field",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "[\r\n  { \"label\": \"Name\", \"type\": \"TEXT\", \"order\": 1, \"required\": true, \"options\": [] },\r\n  { \"label\": \"Employee ID\", \"type\": \"TEXT\", \"order\": 2, \"required\": true, \"options\": [] },\r\n  { \"label\": \"Reason\", \"type\": \"TEXT\", \"order\": 4, \"required\": true, \"options\": [] },\r\n  { \"label\": \"Request To\", \"type\": \"SELECT\", \"order\": 3, \"required\": true, \"options\": [\"Leader\", \"Manager\"] }\r\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms/1/fields",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "1",
+                "fields"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update field of form",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\":\"Request for coming late 04/05/2026\",\r\n    \"description\":\"abcdeasdasdkl\",\r\n    \"order\":2,\r\n    \"status\":\"DRAFT\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms/1/fields/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "1",
+                "fields",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete field of form",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Request for coming late 04/05/2026\",\r\n  \"description\": \"Employee can request for coming late\",\r\n  \"order\": 4\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms/1/fields/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "1",
+                "fields",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get active form",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms/active",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "active"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "submission",
+      "item": [
+        {
+          "name": "submit",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"fieldValueList\": [\r\n    { \"fieldId\": 1, \"fieldType\": \"TEXT\", \"value\": \"ABC\" },\r\n    { \"fieldId\": 2, \"fieldType\": \"TEXT\", \"value\": \"220192138\" },\r\n    { \"fieldId\": 3, \"fieldType\": \"TEXT\", \"value\": \"Tắc đường\" },\r\n    { \"fieldId\": 4, \"fieldType\": \"SELECT\", \"value\": \"Manager\" }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/forms/1/submit",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "forms",
+                "1",
+                "submit"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get submitted form",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"fieldValueList\": [\r\n    {\r\n      \"fieldId\": 6,\r\n      \"value\": \"Nguyễn Văn A\"\r\n    },\r\n    {\r\n      \"fieldId\": 7,\r\n      \"value\": \"IT Department\"\r\n    },\r\n    {\r\n      \"fieldId\": 8,\r\n      \"value\": \"Đã hoàn thành task dự án X\"\r\n    }\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/submissions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "submissions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

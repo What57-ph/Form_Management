@@ -19,10 +19,6 @@ public class Submission {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user;
-
-    @ManyToOne
     @JoinColumn(name = "form_id")
     Form form;
 

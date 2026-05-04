@@ -15,7 +15,6 @@ public class GlobalException {
     @ExceptionHandler(value = {
             ExistException.class,
             FieldValidationException.class,
-            NotFoundException.class,
             RequestInvalidException.class
     })
     public ResponseEntity<RestResponse<Object>> handleBadRequestException(Exception e) {
@@ -29,12 +28,24 @@ public class GlobalException {
         );
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<RestResponse<Object>> handleNotFoundCase(Exception e) {
+        return ResponseEntity.badRequest().body(
+                RestResponse.builder()
+                        .data(null)
+                        .error(e.getMessage())
+                        .statusCode(HttpStatus.NOT_FOUND.value())
+                        .message(null)
+                        .build()
+        );
+    }
+
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<RestResponse<Object>> handleNotDefinedException(Exception e) {
         return ResponseEntity.internalServerError().body(
                 RestResponse.builder()
                         .data(null)
-                        .error(e.getMessage())
+                        .error("Internal server error")
                         .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message(null)
                         .build()

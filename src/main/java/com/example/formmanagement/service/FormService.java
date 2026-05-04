@@ -11,6 +11,7 @@ import com.example.formmanagement.mapper.FieldMapper;
 import com.example.formmanagement.mapper.FormMapper;
 import com.example.formmanagement.repository.FieldRepository;
 import com.example.formmanagement.repository.FormRepository;
+import com.example.formmanagement.utils.enums.FieldType;
 import com.example.formmanagement.utils.enums.FormStatus;
 import com.example.formmanagement.utils.exception.ExistException;
 import com.example.formmanagement.utils.exception.NotFoundException;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -122,15 +124,28 @@ public class FormService {
 
         for (RequestFieldDTO dto : requestFieldDTOs) {
 
+            boolean isBaseValid =
+                    dto.getRequired() != null &&
+                            dto.getOrder() != null &&
+                            dto.getLabel() != null &&
+                            dto.getType() != null;
+
+            boolean isSelectValid =
+                    dto.getType() != FieldType.SELECT || dto.getOptions() != null
+                            && !dto.getOptions().isEmpty();
+
+            if (!isBaseValid || !isSelectValid) {
+                throw new RequestInvalidException("All content of field are required");
+            }
+
             Field field = Field.builder()
                     .label(dto.getLabel())
                     .type(dto.getType())
                     .required(dto.getRequired())
-                    .order(dto.getOrder() != null
-//                            String.join("; ", dto.getOrder())
-                            ? dto.getOrder()
+                    .order(dto.getOrder())
+                    .options(dto.getOptions() != null
+                            ? String.join("; ", dto.getOptions())
                             : null)
-                    .options(dto.getOptions() != null ? String.join("; ", dto.getOptions()) : null)
                     .form(form)
                     .build();
 

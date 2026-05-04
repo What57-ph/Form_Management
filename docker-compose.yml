@@ -1,7 +1,5 @@
-version: "3.8"
-
 services:
-  mysql:
+  db:
     image: mysql:8.0.20
     container_name: mysql-form-app
     environment:
@@ -9,14 +7,15 @@ services:
       MYSQL_DATABASE: formmanagement
     ports:
       - "3307:3306"
-#    volumes:
-#      - mysql_data:/var/lib/mysql
-#      - ./mysql-init:/docker-entrypoint-initdb.d
+    volumes:
+      - db_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - spring_network
 
   app:
     build: .
@@ -24,9 +23,19 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      mysql:
+      db:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-form-app:3306/formmanagement?useSSL=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1234
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+    networks:
+      - spring_network
+
+networks:
+  spring_network:
+    driver: bridge
+
+volumes:
+  db_data:

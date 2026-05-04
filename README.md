@@ -67,7 +67,7 @@ POST /api/v1/forms/1/fields
 [
   { "label": "Name", "type": "TEXT", "order": 1, "required": true, "options": [] },
   { "label": "Employee ID", "type": "TEXT", "order": 2, "required": true, "options": [] },
-  { "label": "Reason", "type": "SELECT", "order": 3, "required": true, "options": [] }
+  { "label": "Reason", "type": "SELECT", "order": 3, "required": true, "options": ["8h30AM - 9h30AM Sat", "9h30AM - 11h30AM Sat"] }
 ]
 ```
 
@@ -76,7 +76,7 @@ POST /api/v1/forms/1/fields
 POST /api/v1/forms/1/submit
 {
   "fieldValueList": [
-    { "fieldId": 4, "fieldType": "TEXT", "value": "Vinh" },
+    { "fieldId": 4, "fieldType": "TEXT", "value": "ABC" },
     { "fieldId": 5, "fieldType": "TEXT", "value": "220192138" },
     { "fieldId": 6, "fieldType": "SELECT", "value": "8h30AM - 9h30AM Sat" }
   ]

@@ -18,7 +18,7 @@ SPRING_DATASOURCE_PASSWORD=your_password
 
 ```bash
 git clone https://github.com/What57-ph/Form_Management.git
-docker compose up --build
+docker-compose up --build
 ```
 ```bash
 Lưu ý: - Port Mysql có thể không đúng hoặc đang được sử dụng tùy máy, thay đổi theo máy cá nhân 

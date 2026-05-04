@@ -67,7 +67,8 @@ POST /api/v1/forms/1/fields
 [
   { "label": "Name", "type": "TEXT", "order": 1, "required": true, "options": [] },
   { "label": "Employee ID", "type": "TEXT", "order": 2, "required": true, "options": [] },
-  { "label": "Reason", "type": "TEXT", "order": 3, "required": true, "options": [] }
+  { "label": "Reason", "type": "TEXT", "order": 4, "required": true, "options": [] },
+  { "label": "Request To", "type": "SELECT", "order": 3, "required": true, "options": ["Leader", "Manager"] }
 ]
 ```
 
@@ -76,9 +77,10 @@ POST /api/v1/forms/1/fields
 POST /api/v1/forms/1/submit
 {
   "fieldValueList": [
-    { "fieldId": 4, "fieldType": "TEXT", "value": "ABC" },
-    { "fieldId": 5, "fieldType": "TEXT", "value": "220192138" },
-    { "fieldId": 6, "fieldType": "SELECT", "value": "8h30AM - 9h30AM Sat" }
+    { "fieldId": 1, "fieldType": "TEXT", "value": "ABC" },
+    { "fieldId": 2, "fieldType": "TEXT", "value": "220192138" },
+    { "fieldId": 3, "fieldType": "TEXT", "value": "Tắc đường" },
+    { "fieldId": 4, "fieldType": "SELECT", "value": "Manager" }
   ]
 }
 ```
